@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import AdminRoute from "@/components/AdminRoute";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import CampaignDetail from "./pages/CampaignDetail";
@@ -11,6 +12,10 @@ import Leaderboard from "./pages/Leaderboard";
 import Submissions from "./pages/Submissions";
 import InstagramConnect from "./pages/InstagramConnect";
 import Notifications from "./pages/Notifications";
+import AdminOverview from "./pages/admin/AdminOverview";
+import AdminCampaigns from "./pages/admin/AdminCampaigns";
+import AdminSubmissions from "./pages/admin/AdminSubmissions";
+import AdminUsers from "./pages/admin/AdminUsers";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +35,11 @@ const App = () => (
             <Route path="/submissions" element={<ProtectedRoute><Submissions /></ProtectedRoute>} />
             <Route path="/instagram" element={<ProtectedRoute><InstagramConnect /></ProtectedRoute>} />
             <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+            {/* Admin routes */}
+            <Route path="/admin" element={<AdminRoute><AdminOverview /></AdminRoute>} />
+            <Route path="/admin/campaigns" element={<AdminRoute><AdminCampaigns /></AdminRoute>} />
+            <Route path="/admin/submissions" element={<AdminRoute><AdminSubmissions /></AdminRoute>} />
+            <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
