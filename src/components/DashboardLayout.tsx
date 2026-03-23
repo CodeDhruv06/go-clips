@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { LayoutDashboard, FileVideo, Instagram, Bell, LogOut, Menu, X, Trophy } from 'lucide-react';
+import { LayoutDashboard, FileVideo, Instagram, Bell, LogOut, Menu, X, Shield } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -12,7 +12,7 @@ const navItems = [
 ];
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
-  const { profile, signOut } = useAuth();
+  const { profile, signOut, isAdmin } = useAuth();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -47,6 +47,11 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           </nav>
 
           <div className="flex items-center gap-2">
+            {isAdmin && (
+              <Link to="/admin" className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-primary/10 text-primary text-xs font-medium hover:bg-primary/20 transition-colors">
+                <Shield className="h-3.5 w-3.5" /> Admin
+              </Link>
+            )}
             <Link to="/notifications" className="relative p-2 rounded-lg hover:bg-muted transition-colors">
               <Bell className="h-4 w-4 text-muted-foreground" />
             </Link>
