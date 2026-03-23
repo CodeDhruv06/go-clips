@@ -14,7 +14,131 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      campaigns: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          id: string
+          reward_per_million_views: number
+          rules: string[]
+          status: string
+          title: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description: string
+          id?: string
+          reward_per_million_views?: number
+          rules?: string[]
+          status?: string
+          title: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          reward_per_million_views?: number
+          rules?: string[]
+          status?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          id: string
+          message: string
+          read: boolean
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          message: string
+          read?: boolean
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          message?: string
+          read?: boolean
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          followers_count: number
+          id: string
+          instagram_connected: boolean
+          instagram_username: string | null
+          name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string
+          followers_count?: number
+          id?: string
+          instagram_connected?: boolean
+          instagram_username?: string | null
+          name?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          followers_count?: number
+          id?: string
+          instagram_connected?: boolean
+          instagram_username?: string | null
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      submissions: {
+        Row: {
+          campaign_id: string
+          id: string
+          reel_url: string
+          status: string
+          submitted_at: string
+          user_id: string
+        }
+        Insert: {
+          campaign_id: string
+          id?: string
+          reel_url: string
+          status?: string
+          submitted_at?: string
+          user_id: string
+        }
+        Update: {
+          campaign_id?: string
+          id?: string
+          reel_url?: string
+          status?: string
+          submitted_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "submissions_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
