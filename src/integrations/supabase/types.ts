@@ -20,6 +20,7 @@ export type Database = {
           created_at: string
           description: string
           id: string
+          image_url: string | null
           reward_per_million_views: number
           rules: string[]
           status: string
@@ -30,6 +31,7 @@ export type Database = {
           created_at?: string
           description: string
           id?: string
+          image_url?: string | null
           reward_per_million_views?: number
           rules?: string[]
           status?: string
@@ -40,6 +42,7 @@ export type Database = {
           created_at?: string
           description?: string
           id?: string
+          image_url?: string | null
           reward_per_million_views?: number
           rules?: string[]
           status?: string
@@ -79,8 +82,10 @@ export type Database = {
           id: string
           instagram_connected: boolean
           instagram_username: string | null
+          instagram_verified: boolean
           name: string
           user_id: string
+          verification_code: string | null
         }
         Insert: {
           created_at?: string
@@ -89,8 +94,10 @@ export type Database = {
           id?: string
           instagram_connected?: boolean
           instagram_username?: string | null
+          instagram_verified?: boolean
           name?: string
           user_id: string
+          verification_code?: string | null
         }
         Update: {
           created_at?: string
@@ -99,35 +106,43 @@ export type Database = {
           id?: string
           instagram_connected?: boolean
           instagram_username?: string | null
+          instagram_verified?: boolean
           name?: string
           user_id?: string
+          verification_code?: string | null
         }
         Relationships: []
       }
       submissions: {
         Row: {
           campaign_id: string
+          earnings: number
           id: string
           reel_url: string
           status: string
           submitted_at: string
           user_id: string
+          views: number
         }
         Insert: {
           campaign_id: string
+          earnings?: number
           id?: string
           reel_url: string
           status?: string
           submitted_at?: string
           user_id: string
+          views?: number
         }
         Update: {
           campaign_id?: string
+          earnings?: number
           id?: string
           reel_url?: string
           status?: string
           submitted_at?: string
           user_id?: string
+          views?: number
         }
         Relationships: [
           {

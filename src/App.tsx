@@ -7,6 +7,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import CampaignDetail from "./pages/CampaignDetail";
+import Leaderboard from "./pages/Leaderboard";
 import Submissions from "./pages/Submissions";
 import InstagramConnect from "./pages/InstagramConnect";
 import Notifications from "./pages/Notifications";
@@ -25,6 +26,7 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/campaign/:id" element={<ProtectedRoute><CampaignDetail /></ProtectedRoute>} />
+            <Route path="/campaign/:id/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
             <Route path="/submissions" element={<ProtectedRoute><Submissions /></ProtectedRoute>} />
             <Route path="/instagram" element={<ProtectedRoute><InstagramConnect /></ProtectedRoute>} />
             <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
