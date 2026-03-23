@@ -5,16 +5,24 @@ import DashboardLayout from '@/components/DashboardLayout';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { motion } from 'framer-motion';
-import { ExternalLink } from 'lucide-react';
-import type { Tables } from '@/integrations/supabase/types';
+import { ExternalLink, Eye, DollarSign, FileVideo } from 'lucide-react';
 
-type Submission = Tables<'submissions'> & { campaigns?: { title: string } | null };
+interface Submission {
+  id: string;
+  campaign_id: string;
+  reel_url: string;
+  status: string;
+  submitted_at: string;
+  views: number;
+  earnings: number;
+  campaigns?: { title: string } | null;
+}
 
 const statusColors: Record<string, string> = {
-  Pending: 'bg-warning/20 text-warning',
-  Approved: 'bg-success/20 text-success',
-  Rejected: 'bg-destructive/20 text-destructive',
-  Flagged: 'bg-accent/20 text-accent',
+  Pending: 'bg-warning/10 text-warning border border-warning/20',
+  Approved: 'bg-success/10 text-success border border-success/20',
+  Rejected: 'bg-destructive/10 text-destructive border border-destructive/20',
+  Flagged: 'bg-primary/10 text-primary border border-primary/20',
 };
 
 const Submissions = () => {
@@ -24,22 +32,24 @@ const Submissions = () => {
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterCampaign, setFilterCampaign] = useState('all');
   const [filterDate, setFilterDate] = useState('all');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!user) return;
 
-    supabase
-      .from('submissions')
-      .select('*, campaigns(title)')
-      .eq('user_id', user.id)
-      .order('submitted_at', { ascending: false })
-      .then(({ data }) => {
-        if (data) setSubmissions(data as Submission[]);
-      });
+    const fetchData = async () => {
+      const { data } = await supabase
+        .from('submissions')
+        .select('*, campaigns(title)')
+        .eq('user_id', user.id)
+        .order('submitted_at', { ascending: false });
+      if (data) setSubmissions(data as Submission[]);
 
-    supabase.from('campaigns').select('id, title').then(({ data }) => {
-      if (data) setCampaigns(data);
-    });
+      const { data: campData } = await supabase.from('campaigns').select('id, title');
+      if (campData) setCampaigns(campData);
+      setLoading(false);
+    };
+    fetchData();
   }, [user]);
 
   const filtered = submissions.filter(s => {
@@ -56,12 +66,11 @@ const Submissions = () => {
 
   return (
     <DashboardLayout>
-      <h1 className="font-display text-2xl font-bold mb-6">My Submissions</h1>
+      <h1 className="font-display text-xl font-bold mb-5">My Submissions</h1>
 
-      {/* Filters */}
-      <div className="flex flex-wrap gap-3 mb-6">
+      <div className="flex flex-wrap gap-3 mb-5">
         <Select value={filterStatus} onValueChange={setFilterStatus}>
-          <SelectTrigger className="w-[150px] bg-secondary border-border">
+          <SelectTrigger className="w-[140px]">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -74,7 +83,7 @@ const Submissions = () => {
         </Select>
 
         <Select value={filterCampaign} onValueChange={setFilterCampaign}>
-          <SelectTrigger className="w-[200px] bg-secondary border-border">
+          <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Campaign" />
           </SelectTrigger>
           <SelectContent>
@@ -86,7 +95,7 @@ const Submissions = () => {
         </Select>
 
         <Select value={filterDate} onValueChange={setFilterDate}>
-          <SelectTrigger className="w-[150px] bg-secondary border-border">
+          <SelectTrigger className="w-[140px]">
             <SelectValue placeholder="Date" />
           </SelectTrigger>
           <SelectContent>
@@ -97,37 +106,60 @@ const Submissions = () => {
         </Select>
       </div>
 
-      {filtered.length === 0 ? (
+      {loading ? (
+        <div className="flex justify-center py-12">
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        </div>
+      ) : filtered.length === 0 ? (
         <div className="glass-card p-12 text-center">
+          <FileVideo className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
           <p className="text-muted-foreground">No submissions found.</p>
+          <p className="text-xs text-muted-foreground mt-1">Submit a reel from a campaign to see it here.</p>
         </div>
       ) : (
-        <div className="space-y-3">
-          {filtered.map((sub, i) => (
-            <motion.div
-              key={sub.id}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.03 }}
-              className="glass-card p-4 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6"
-            >
-              <div className="flex-1 min-w-0">
-                <p className="font-medium truncate">{sub.campaigns?.title || 'Unknown Campaign'}</p>
-                <a
-                  href={sub.reel_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-primary hover:underline flex items-center gap-1 mt-1"
+        <div className="glass-card overflow-hidden">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-border bg-muted/50">
+                <th className="text-left py-3 px-4 font-medium text-muted-foreground">Campaign</th>
+                <th className="text-left py-3 px-4 font-medium text-muted-foreground">Reel</th>
+                <th className="text-left py-3 px-4 font-medium text-muted-foreground">Status</th>
+                <th className="text-right py-3 px-4 font-medium text-muted-foreground">Views</th>
+                <th className="text-right py-3 px-4 font-medium text-muted-foreground">Earnings</th>
+                <th className="text-right py-3 px-4 font-medium text-muted-foreground">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((sub, i) => (
+                <motion.tr
+                  key={sub.id}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: i * 0.02 }}
+                  className="border-b border-border last:border-b-0 hover:bg-muted/30 transition-colors"
                 >
-                  View Reel <ExternalLink className="h-3 w-3" />
-                </a>
-              </div>
-              <Badge className={statusColors[sub.status] || ''}>{sub.status}</Badge>
-              <span className="text-xs text-muted-foreground whitespace-nowrap">
-                {new Date(sub.submitted_at).toLocaleDateString()}
-              </span>
-            </motion.div>
-          ))}
+                  <td className="py-3 px-4 font-medium">{sub.campaigns?.title || 'Unknown'}</td>
+                  <td className="py-3 px-4">
+                    <a href={sub.reel_url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline flex items-center gap-1">
+                      View <ExternalLink className="h-3 w-3" />
+                    </a>
+                  </td>
+                  <td className="py-3 px-4">
+                    <Badge className={statusColors[sub.status] || ''}>{sub.status}</Badge>
+                  </td>
+                  <td className="py-3 px-4 text-right text-muted-foreground">
+                    {(sub.views || 0).toLocaleString()}
+                  </td>
+                  <td className="py-3 px-4 text-right text-success font-medium">
+                    ${Number(sub.earnings || 0).toFixed(2)}
+                  </td>
+                  <td className="py-3 px-4 text-right text-muted-foreground text-xs">
+                    {new Date(sub.submitted_at).toLocaleDateString()}
+                  </td>
+                </motion.tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </DashboardLayout>

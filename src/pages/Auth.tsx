@@ -29,30 +29,30 @@ const Auth = () => {
       if (!name.trim()) { toast.error('Name is required'); setSubmitting(false); return; }
       const { error } = await signUp(email, password, name);
       if (error) toast.error(error.message);
-      else toast.success('Account created! Check your email to confirm, or log in if auto-confirm is enabled.');
+      else toast.success('Account created! You can now log in.');
     }
     setSubmitting(false);
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4">
+    <div className="flex min-h-screen items-center justify-center px-4 bg-background">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.4 }}
         className="w-full max-w-md"
       >
         <div className="text-center mb-8">
-          <h1 className="font-display text-4xl font-bold gradient-text mb-2">ReelCash</h1>
-          <p className="text-muted-foreground">Earn money from your Instagram Reels</p>
+          <h1 className="font-display text-4xl font-bold gradient-text mb-2">Viralkaro</h1>
+          <p className="text-muted-foreground text-sm">Earn money from your Instagram Reels</p>
         </div>
 
         <div className="glass-card p-8">
-          <div className="flex mb-6 rounded-lg bg-secondary p-1">
+          <div className="flex mb-6 rounded-lg bg-muted p-1">
             <button
               onClick={() => setIsLogin(true)}
               className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${
-                isLogin ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'
+                isLogin ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground'
               }`}
             >
               Log In
@@ -60,7 +60,7 @@ const Auth = () => {
             <button
               onClick={() => setIsLogin(false)}
               className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${
-                !isLogin ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'
+                !isLogin ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground'
               }`}
             >
               Sign Up
@@ -71,16 +71,16 @@ const Auth = () => {
             {!isLogin && (
               <div>
                 <Label htmlFor="name">Full Name</Label>
-                <Input id="name" value={name} onChange={e => setName(e.target.value)} placeholder="John Doe" className="mt-1 bg-secondary border-border" />
+                <Input id="name" value={name} onChange={e => setName(e.target.value)} placeholder="John Doe" className="mt-1" />
               </div>
             )}
             <div>
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" required className="mt-1 bg-secondary border-border" />
+              <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" required className="mt-1" />
             </div>
             <div>
               <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" required minLength={6} className="mt-1 bg-secondary border-border" />
+              <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" required minLength={6} className="mt-1" />
             </div>
             <Button type="submit" className="w-full" disabled={submitting}>
               {submitting ? 'Loading...' : isLogin ? 'Log In' : 'Create Account'}
