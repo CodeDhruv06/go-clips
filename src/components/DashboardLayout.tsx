@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { LayoutDashboard, FileVideo, Instagram, Bell, LogOut, Menu, X, Trophy } from 'lucide-react';
+import { LayoutDashboard, FileVideo, Instagram, Bell, LogOut, Menu, X, Shield } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
