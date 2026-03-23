@@ -42,7 +42,7 @@ const AdminSubmissions = () => {
   const fetchSubmissions = async () => {
     const { data } = await supabase
       .from('submissions')
-      .select('*, campaigns(title, reward_per_million_views), profiles!submissions_user_id_fkey(instagram_username, name, email)')
+      .select('*, campaigns(title, reward_per_million_views)')
       .order('submitted_at', { ascending: false });
 
     // profiles join via user_id - need manual join since FK name may differ
