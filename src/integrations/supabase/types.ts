@@ -79,11 +79,14 @@ export type Database = {
       }
       profiles: {
         Row: {
+          account_status: "active" | "banned" | "suspended"
           created_at: string
           email: string
           followers_count: number
           id: string
           instagram_connected: boolean
+          instagram_connection_status: "approval_pending" | "approved" | "not_connected" | "rejected"
+          instagram_user_id: string | null
           instagram_username: string | null
           instagram_verified: boolean
           name: string
@@ -91,11 +94,14 @@ export type Database = {
           verification_code: string | null
         }
         Insert: {
+          account_status?: "active" | "banned" | "suspended"
           created_at?: string
           email?: string
           followers_count?: number
           id?: string
           instagram_connected?: boolean
+          instagram_connection_status?: "approval_pending" | "approved" | "not_connected" | "rejected"
+          instagram_user_id?: string | null
           instagram_username?: string | null
           instagram_verified?: boolean
           name?: string
@@ -103,11 +109,14 @@ export type Database = {
           verification_code?: string | null
         }
         Update: {
+          account_status?: "active" | "banned" | "suspended"
           created_at?: string
           email?: string
           followers_count?: number
           id?: string
           instagram_connected?: boolean
+          instagram_connection_status?: "approval_pending" | "approved" | "not_connected" | "rejected"
+          instagram_user_id?: string | null
           instagram_username?: string | null
           instagram_verified?: boolean
           name?: string

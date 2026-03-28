@@ -26,6 +26,7 @@ const InstagramConnect = () => {
   }, [profile]);
 
   const isVerified = (profile as any)?.instagram_verified === true;
+  const isPendingApproval = profile?.instagram_connection_status === 'approval_pending';
 
   const handleGenerateCode = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,15 +46,17 @@ const InstagramConnect = () => {
       .from('profiles')
       .update({
         instagram_connected: true,
+        instagram_connection_status: 'approval_pending',
+        instagram_user_id: trimmedUsername.toLowerCase(),
         instagram_username: trimmedUsername,
         followers_count: count,
         verification_code: code,
         instagram_verified: false,
-      } as any)
+      })
       .eq('user_id', user.id);
 
     if (error) {
-      toast.error('Failed to save.');
+      toast.error(error.message.includes('duplicate') ? 'This Instagram account is already linked.' : 'Failed to save.');
     } else {
       setStep('verify');
       await refreshProfile();
@@ -65,18 +68,21 @@ const InstagramConnect = () => {
     if (!user) return;
     setVerifying(true);
 
-    // Simulate verification delay (mock: always succeeds)
+    // Manual approval flow: submission is stored and waits for admin review.
     await new Promise(resolve => setTimeout(resolve, 2000));
 
     const { error } = await supabase
       .from('profiles')
-      .update({ instagram_verified: true } as any)
+      .update({
+        instagram_connected: true,
+        instagram_connection_status: 'approval_pending',
+      })
       .eq('user_id', user.id);
 
     if (error) {
-      toast.error('Verification failed.');
+      toast.error('Failed to submit your account for review.');
     } else {
-      toast.success('Instagram verified successfully!');
+      toast.success('Instagram account submitted for manual approval.');
       await refreshProfile();
     }
     setVerifying(false);
@@ -89,11 +95,13 @@ const InstagramConnect = () => {
       .from('profiles')
       .update({
         instagram_connected: false,
+        instagram_connection_status: 'not_connected',
+        instagram_user_id: null,
         instagram_username: null,
         followers_count: 0,
         verification_code: null,
         instagram_verified: false,
-      } as any)
+      })
       .eq('user_id', user.id);
     toast.success('Instagram disconnected.');
     await refreshProfile();
@@ -135,18 +143,29 @@ const InstagramConnect = () => {
               Disconnect
             </Button>
           </div>
+        ) : isPendingApproval ? (
+          <div className="glass-card p-6 text-center">
+            <CheckCircle2 className="h-12 w-12 text-warning mx-auto mb-4" />
+            <p className="font-semibold text-lg">Approval Pending for @{profile?.instagram_username}</p>
+            <p className="text-sm text-muted-foreground mt-2">
+              Your Instagram account has been submitted and is waiting for admin approval.
+            </p>
+            <Button variant="outline" className="mt-6" onClick={handleDisconnect} disabled={saving}>
+              Disconnect
+            </Button>
+          </div>
         ) : profile?.instagram_connected && step === 'input' ? (
           // Already connected but not verified, go to verify step
           <div className="glass-card p-6 text-center">
             <CheckCircle2 className="h-12 w-12 text-warning mx-auto mb-4" />
             <p className="font-semibold text-lg">Connected as @{profile.instagram_username}</p>
-            <p className="text-sm text-muted-foreground mt-2">Your account is not yet verified.</p>
+            <p className="text-sm text-muted-foreground mt-2">Complete the review submission to request approval.</p>
             <div className="flex gap-2 justify-center mt-4">
               <Button onClick={() => {
-                setVerificationCode((profile as any)?.verification_code || generateCode());
+                setVerificationCode(profile?.verification_code || generateCode());
                 setStep('verify');
               }}>
-                Continue Verification
+                Continue
               </Button>
               <Button variant="outline" onClick={handleDisconnect} disabled={saving}>
                 Disconnect
@@ -208,10 +227,10 @@ const InstagramConnect = () => {
             <Button onClick={handleVerify} className="w-full" disabled={verifying}>
               {verifying ? (
                 <span className="flex items-center gap-2">
-                  <Loader2 className="h-4 w-4 animate-spin" /> Verifying...
+                  <Loader2 className="h-4 w-4 animate-spin" /> Submitting...
                 </span>
               ) : (
-                'Verify'
+                'Submit For Approval'
               )}
             </Button>
             <Button variant="ghost" className="w-full" onClick={() => setStep('input')}>

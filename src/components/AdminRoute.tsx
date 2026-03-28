@@ -1,8 +1,9 @@
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { Button } from '@/components/ui/button';
 
 const AdminRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, loading, isAdmin } = useAuth();
+  const { user, loading, isAdmin, profile, signOut } = useAuth();
 
   if (loading) {
     return (
@@ -13,6 +14,19 @@ const AdminRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   if (!user) return <Navigate to="/auth" replace />;
+  if (profile?.account_status && profile.account_status !== 'active') {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background px-4">
+        <div className="glass-card max-w-md p-8 text-center space-y-3">
+          <h1 className="font-display text-2xl font-bold">Account Restricted</h1>
+          <p className="text-sm text-muted-foreground">
+            Your account is not allowed to access the admin panel.
+          </p>
+          <Button onClick={() => { void signOut(); }}>Log Out</Button>
+        </div>
+      </div>
+    );
+  }
   if (!isAdmin) return <Navigate to="/dashboard" replace />;
 
   return <>{children}</>;
