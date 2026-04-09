@@ -149,57 +149,26 @@ const Dashboard = () => {
           </motion.div>
         ))}
       </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="glass-card p-5">
-          <div className="flex items-center gap-2 mb-1">
-            <DollarSign className="h-4 w-4 text-success" />
-            <span className="text-sm text-muted-foreground">Total Earnings</span>
+      <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-stretch">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="glass-card p-5 lg:w-1/2"
+        >
+          <div className="flex items-center gap-2 mb-8">
+            <DollarSign className="h-8 w-8 text-success" />
+            <span className="text-2xl text-muted-foreground">Total Earnings</span>
           </div>
           <p className="font-display text-3xl font-bold text-success">₹ {overview.total_earnings.toFixed(2)}</p>
         </motion.div>
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="glass-card p-5">
-          <div className="flex items-center gap-2 mb-1">
-            <Radar className="h-4 w-4 text-info" />
-            <span className="text-sm text-muted-foreground">Analytics Coverage</span>
-          </div>
-          <p className="font-display text-3xl font-bold text-info">{overview.reels_with_analytics}/{overview.total_submissions}</p>
-          <p className="mt-2 text-xs text-muted-foreground">
-            {overview.latest_sync_at ? `Latest sync ${new Date(overview.latest_sync_at).toLocaleString()}` : 'No synced reel analytics yet.'}
-          </p>
-        </motion.div>
-      </div>
 
-      <div className="mb-8 grid gap-4 lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)]">
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.32 }} className="glass-card p-5">
-          <div className="mb-4 flex items-center gap-2">
-            <BellRing className="h-4 w-4 text-primary" />
-            <div>
-              <h2 className="font-display text-lg font-semibold">Latest Notifications</h2>
-              <p className="text-sm text-muted-foreground">Approval, rejection, verification, and analytics updates show up here.</p>
-            </div>
-          </div>
-
-          {notifications.length === 0 ? (
-            <p className="rounded-xl border border-dashed border-border/80 px-4 py-6 text-sm text-muted-foreground">
-              No notifications yet. As soon as a reel is reviewed or your Instagram verification changes, it will show here.
-            </p>
-          ) : (
-            <div className="space-y-3">
-              {notifications.map(notification => (
-                <div key={notification.id} className="rounded-xl border border-border/70 bg-background/50 p-3">
-                  <div className="flex items-start justify-between gap-3">
-                    <p className="text-sm">{notification.message}</p>
-                    {!notification.read && <span className="mt-1 h-2.5 w-2.5 shrink-0 rounded-full bg-primary" />}
-                  </div>
-                  <p className="mt-2 text-xs text-muted-foreground">{new Date(notification.created_at).toLocaleString()}</p>
-                </div>
-              ))}
-            </div>
-          )}
-        </motion.div>
-
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.36 }} className="glass-card p-5">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.36 }}
+          className="glass-card p-5 lg:flex-1"
+        >
           <h2 className="font-display text-lg font-semibold">Creator Snapshot</h2>
           <div className="mt-4 space-y-4 text-sm text-muted-foreground">
             <div className="rounded-xl border border-border/70 bg-background/50 p-4">

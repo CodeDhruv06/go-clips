@@ -108,11 +108,12 @@ const CampaignDetail = () => {
 
   return (
     <DashboardLayout>
-      <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="mb-4 text-muted-foreground">
-        <ArrowLeft className="h-4 w-4 mr-1" /> Back
-      </Button>
+      <div className="mx-auto w-full max-w-3xl">
+        <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="mb-4 text-muted-foreground">
+          <ArrowLeft className="h-4 w-4 mr-1" /> Back
+        </Button>
 
-      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="max-w-3xl">
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="w-full">
         {campaign.image_url && (
           <div className="h-48 rounded-xl overflow-hidden mb-6">
             <img src={campaign.image_url} alt={campaign.title} className="w-full h-full object-cover" />
@@ -215,6 +216,7 @@ const CampaignDetail = () => {
           )}
         </div>
       </motion.div>
+      </div>
     </DashboardLayout>
   );
 };

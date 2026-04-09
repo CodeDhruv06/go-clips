@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { LayoutDashboard, Megaphone, FileCheck, Users, LogOut, ArrowLeft, Zap } from 'lucide-react';
+import { LayoutDashboard, Megaphone, FileCheck, Users, LogOut, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 
@@ -24,14 +24,9 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
         transition={{ duration: 0.3 }}
         className="w-64 bg-gradient-to-b from-sidebar via-sidebar to-sidebar/80 border-r border-sidebar-border flex flex-col shrink-0"
       >
-        <div className="p-6 border-b border-sidebar-border/50">
+        <div className="p-3 border-b border-sidebar-border/50">
           <Link to="/admin" className="font-display text-2xl font-bold gradient-text flex items-center gap-2">
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-            >
-              <Zap className="h-6 w-6" />
-            </motion.div>
+            <img src="/3.png" alt="Go Clips logo" className="h-16 w-16 object-contain" />
             Go Clips
           </Link>
           <p className="text-xs text-sidebar-foreground/60 mt-1">Admin Panel</p>

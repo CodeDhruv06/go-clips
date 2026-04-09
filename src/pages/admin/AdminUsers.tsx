@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { CheckCircle2, Users as UsersIcon } from 'lucide-react';
 import AdminLayout from '@/components/AdminLayout';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 import { api } from '@/lib/api';
 import { getInstagramProfileUrl } from '@/lib/utils';
 
@@ -19,6 +20,7 @@ interface UserProfile {
 
 const AdminUsers = () => {
   const [users, setUsers] = useState<UserProfile[]>([]);
+  const [searchUser, setSearchUser] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -27,6 +29,21 @@ const AdminUsers = () => {
       setLoading(false);
     });
   }, []);
+
+  const filteredUsers = users.filter(user => {
+    const search = searchUser.trim().toLowerCase();
+    if (!search) return true;
+
+    return [
+      user.name,
+      user.email,
+      user.instagram_username,
+      user.user_id,
+      user.id,
+    ]
+      .filter(Boolean)
+      .some(value => String(value).toLowerCase().includes(search));
+  });
 
   return (
     <AdminLayout>
@@ -43,6 +60,15 @@ const AdminUsers = () => {
           </motion.div>
         </div>
 
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
+          <Input
+            value={searchUser}
+            onChange={event => setSearchUser(event.target.value)}
+            placeholder="Search user analytics by username, name, email, or user ID"
+            className="max-w-xl bg-secondary/50 border-border/50 focus:border-primary"
+          />
+        </motion.div>
+
         {loading ? (
           <div className="flex justify-center py-20">
             <div className="space-y-4 text-center">
@@ -50,14 +76,14 @@ const AdminUsers = () => {
               <p className="text-muted-foreground text-sm">Loading users...</p>
             </div>
           </div>
-        ) : users.length === 0 ? (
+        ) : filteredUsers.length === 0 ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="stat-card py-12 text-center"
           >
             <UsersIcon className="h-12 w-12 text-muted-foreground/30 mx-auto mb-3" />
-            <p className="text-muted-foreground">No users found</p>
+            <p className="text-muted-foreground">No users found for this search</p>
           </motion.div>
         ) : (
           <motion.div
@@ -78,7 +104,7 @@ const AdminUsers = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {users.map((user, index) => {
+                  {filteredUsers.map((user, index) => {
                     const instagramUrl = getInstagramProfileUrl(user.instagram_username);
 
                     return (

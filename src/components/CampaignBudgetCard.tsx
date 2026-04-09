@@ -80,21 +80,21 @@ export const CampaignBudgetCard = ({ campaign, className = '', compact = false }
         <div className="mt-6 grid grid-cols-2 gap-4 text-sm sm:grid-cols-4">
           <div>
             <p className="text-slate-400">Paid Out</p>
-            <p className="mt-1 text-2xl font-semibold">₹{campaign.spent_budget_rupees.toLocaleString('en-IN')}</p>
+            <p className="mt-1 text-lg font-semibold">₹{campaign.spent_budget_rupees.toLocaleString('en-IN')}</p>
             <p className="text-slate-400">/ ₹{campaign.budget_rupees.toLocaleString('en-IN')}</p>
           </div>
           <div>
             <p className="text-slate-400">CPM</p>
-            <p className="mt-1 text-2xl font-semibold">₹{campaign.rupees_per_thousand_views.toLocaleString('en-IN')}</p>
+            <p className="mt-1 text-lg font-semibold">₹{campaign.rupees_per_thousand_views.toLocaleString('en-IN')}</p>
             <p className="text-slate-400">/ 1k views</p>
           </div>
           <div>
             <p className="text-slate-400">Views</p>
-            <p className="mt-1 text-2xl font-semibold">{campaign.billed_views.toLocaleString('en-IN')}</p>
+            <p className="mt-1 text-lg font-semibold">{campaign.billed_views.toLocaleString('en-IN')}</p>
           </div>
           <div>
             <p className="text-slate-400">Remaining</p>
-            <p className="mt-1 text-2xl font-semibold text-emerald-400">₹{campaign.remaining_budget_rupees.toLocaleString('en-IN')}</p>
+            <p className="mt-1 text-lg font-semibold text-emerald-400">₹{campaign.remaining_budget_rupees.toLocaleString('en-IN')}</p>
           </div>
         </div>
 
